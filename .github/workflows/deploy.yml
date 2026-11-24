@@ -62,3 +62,17 @@ jobs:
             sleep 20
           done
           exit 1
+
+  verify:
+    name: Check the app is alive
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call the health endpoint
+        run: |
+          for i in $(seq 1 12); do
+            if curl -fsS "${{ secrets.APP_URL }}/api/health"; then exit 0; fi
+            echo "Not ready, trying again..."
+            sleep 10
+          done
+          exit 1
