@@ -28,3 +28,37 @@ jobs:
         with:
           name: app-bundle
           path: app.zip
+
+  deploy:
+    name: Upload to S3 and refresh servers
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: app-bundle
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: us-east-1
+      - name: Upload release to S3
+        run: aws s3 cp app.zip s3://${{ secrets.S3_BUCKET }}/releases/app.zip
+      - name: Replace servers with the new version
+        run: |
+          aws autoscaling start-instance-refresh \
+            --auto-scaling-group-name asg-campusmarket \
+            --preferences '{"MinHealthyPercentage":50,"InstanceWarmup":120}'
+      - name: Wait until the refresh finishes
+        run: |
+          for i in $(seq 1 60); do
+            STATUS=$(aws autoscaling describe-instance-refreshes \
+              --auto-scaling-group-name asg-campusmarket \
+              --query "InstanceRefreshes[0].Status" --output text)
+            echo "Refresh status: $STATUS"
+            if [ "$STATUS" = "Successful" ]; then exit 0; fi
+            if [ "$STATUS" = "Failed" ] || [ "$STATUS" = "Cancelled" ]; then exit 1; fi
+            sleep 20
+          done
+          exit 1
