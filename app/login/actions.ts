@@ -24,3 +24,8 @@ export async function login(
   });
   redirect("/panel");
 }
+
+export async function logout() {
+  (await cookies()).delete("cm_session");
+  redirect("/");
+}
