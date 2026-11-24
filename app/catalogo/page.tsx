@@ -12,14 +12,29 @@ const filters = [
 export default async function CatalogPage({
   searchParams,
 }: {
-  searchParams: Promise<{ tipo?: string }>;
+  searchParams: Promise<{ tipo?: string; q?: string }>;
 }) {
-  const { tipo = "" } = await searchParams;
-  const items = tipo ? listings.filter((l) => l.type === tipo) : listings;
+  const { tipo = "", q = "" } = await searchParams;
+  const items = listings.filter(
+    (l) =>
+      (!tipo || l.type === tipo) &&
+      l.title.toLowerCase().includes(q.toLowerCase()),
+  );
 
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-semibold">Catálogo</h1>
+      <form action="/catalogo" className="flex gap-2">
+        <input
+          name="q"
+          defaultValue={q}
+          placeholder="Buscar libros, comida, tutorías"
+          className="w-full rounded-lg border border-gray-300 px-3 py-2"
+        />
+        <button className="rounded-lg bg-emerald-600 px-4 py-2 text-white">
+          Buscar
+        </button>
+      </form>
       <div className="flex flex-wrap gap-2">
         {filters.map((f) => (
           <Link
