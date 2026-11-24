@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Features from "@/components/Features";
 import ListingCard from "@/components/ListingCard";
 import { listings } from "@/lib/mock-data";
 
@@ -28,6 +29,8 @@ export default function HomePage() {
           </Link>
         </div>
       </section>
+
+      <Features />
 
       <section>
         <h2 className="mb-4 text-lg font-medium">Publicaciones recientes</h2>
