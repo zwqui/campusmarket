@@ -5,7 +5,7 @@ Proyecto de Buenas Prácticas en el Desarrollo de Software, Universidad de la Co
 
 **Aplicación en línea:** http://www.campusmarket.lat
 
-## Capturas de pantalla 
+## Capturas de pantalla
 
 | Inicio | Catálogo | Detalle |
 |---|---|---|
