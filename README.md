@@ -3,7 +3,7 @@
 Plataforma SaaS de compraventa y préstamos para la comunidad universitaria.
 Proyecto de Buenas Prácticas en el Desarrollo de Software, Universidad de la Costa (CUC).
 
-**Aplicación en línea:** http://www.POR-DEFINIR
+**Aplicación en línea:** http://www.campusmarket.lat
 
 ## Capturas de pantalla 
 
